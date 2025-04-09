@@ -12,6 +12,11 @@ import {
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import puppeteer from "puppeteer";
+import path from "path";
+import fs from "fs/promises";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // ツール名の定義
 enum ToolName {
@@ -59,12 +64,15 @@ const createServer = () => {
     }
   );
 
+  // PDF出力先ディレクトリの設定
+  const OUTPUT_DIR = path.join(__dirname, "../output");
+
   // ツール一覧の取得ハンドラー
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     const tools: Tool[] = [
       {
         name: ToolName.CONVERT_TO_PDF,
-        description: "HTMLをPDFに変換します",
+        description: "HTMLをPDFに変換してoutputディレクトリに保存します",
         inputSchema: zodToJsonSchema(ConvertToPdfSchema) as Tool["inputSchema"],
       },
     ];
@@ -88,6 +96,10 @@ const createServer = () => {
           left: "1cm",
         },
       };
+      const pdfOptions = {
+        format: options?.format || defaultOptions.format,
+        margin: options?.margin || defaultOptions.margin,
+      };
 
       try {
         const browser = await puppeteer.launch({
@@ -96,21 +108,24 @@ const createServer = () => {
         const page = await browser.newPage();
         await page.setContent(html, { waitUntil: "networkidle0" });
 
-        const pdfOptions = {
-          format: options?.format ?? defaultOptions.format,
-          margin: options?.margin ?? defaultOptions.margin,
-        };
+        // ファイル名に現在時刻を含める
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const filename = `pdf-${timestamp}.pdf`;
+        const outputPath = path.join(OUTPUT_DIR, filename);
 
+        // PDFバッファを生成
         const pdfBuffer = await page.pdf(pdfOptions);
 
         await browser.close();
 
+        // PDFファイルを保存
+        await fs.writeFile(outputPath, pdfBuffer);
+
         return {
           content: [
             {
-              type: "base64",
-              data: Buffer.from(pdfBuffer).toString("base64"),
-              mimeType: "application/pdf",
+              type: "text",
+              text: outputPath,
             },
           ],
         };

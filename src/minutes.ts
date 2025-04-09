@@ -42,38 +42,26 @@ export const createServer = async () => {
 
   // テンプレート関連のパス設定
   const TEMPLATES_DIR = path.join(__dirname, "../resources");
-  const TEMPLATES_JSON = path.join(TEMPLATES_DIR, "templates.json");
 
   // テンプレート情報を管理するMap
   const templates = new Map<string, Resource>();
 
-  // テンプレート情報の保存
-  const saveTemplateInfo = async () => {
-    const templatesArray = Array.from(templates.entries()).map(([style, resource]) => ({
-      stylename: style,
-      filename: `${style}.html`
-    }));
-
-    await fs.writeFile(
-      TEMPLATES_JSON,
-      JSON.stringify({ templates: templatesArray }, null, 2),
-      "utf-8"
-    );
-  };
-
   // テンプレート情報の読み込み
   const loadTemplateInfo = async () => {
     try {
-      const templateData = JSON.parse(await fs.readFile(TEMPLATES_JSON, "utf-8"));
-      for (const template of templateData.templates) {
-        templates.set(template.stylename, {
-          uri: `minutes://template/${template.stylename}`,
-          name: template.stylename,
+      const files = await fs.readdir(TEMPLATES_DIR);
+      const htmlFiles = files.filter(file => file.endsWith('.html'));
+      
+      for (const file of htmlFiles) {
+        const stylename = path.basename(file, '.html');
+        templates.set(stylename, {
+          uri: `minutes://template/${stylename}`,
+          name: stylename,
           mimeType: "text/html",
         });
       }
     } catch (error) {
-      console.error("Failed to load templates.json:", error);
+      console.error("Failed to load templates:", error);
     }
   };
 
@@ -222,9 +210,6 @@ export const createServer = async () => {
         name: stylename,
         mimeType: "text/html",
       });
-
-      // 設定を保存
-      await saveTemplateInfo();
 
       return {
         content: [

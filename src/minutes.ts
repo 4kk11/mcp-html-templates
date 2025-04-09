@@ -132,8 +132,7 @@ export const createServer = async () => {
     }
     return z.object({
       style: z.enum(styles as [string, ...string[]])
-        .describe("テンプレートのスタイル名（選択可能: " + styles.join(", ") + "）")
-        .default("modern"),
+        .describe("テンプレートのスタイル名（選択可能: " + styles.join(", ") + "）"),
     });
   };
 

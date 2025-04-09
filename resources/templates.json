@@ -1,0 +1,14 @@
+{
+  "templates": [
+    {
+      "style": "modern",
+      "name": "Modern Meeting Minutes Template",
+      "filename": "modern.html"
+    },
+    {
+      "style": "modern-orange",
+      "name": "オレンジパステル議事録",
+      "filename": "modern-orange.html"
+    }
+  ]
+}

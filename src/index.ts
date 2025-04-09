@@ -5,7 +5,7 @@ import { createServer } from "./minutes.js";
 
 async function main() {
   const transport = new StdioServerTransport();
-  const { server } = createServer();
+  const { server } = await createServer();
 
   await server.connect(transport);
 

@@ -26,7 +26,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * MCPサーバーインスタンスを作成する
  * リソース機能のみを有効にした設定で初期化
  */
-export const createServer = () => {
+export const createServer = async () => {
   const server = new Server(
     {
       name: "mcp-minutes-generator",
@@ -40,17 +40,53 @@ export const createServer = () => {
     }
   );
 
-  // モダンなデザインの議事録テンプレートのパス
-  const TEMPLATE_PATH = path.join(__dirname, "../resources/meeting-minutes-template-modern.html");
+  // テンプレート関連のパス設定
+  const TEMPLATES_DIR = path.join(__dirname, "../resources");
+  const TEMPLATES_JSON = path.join(TEMPLATES_DIR, "templates.json");
 
-  // 提供するリソースの定義
-  const RESOURCES: Resource[] = [
-    {
-      uri: "minutes://template/modern", // minutes://スキーマでリソースを識別
-      name: "Modern Meeting Minutes Template",
-      mimeType: "text/html",
-    },
-  ];
+  // テンプレート情報を管理するMap
+  const templates = new Map<string, Resource>();
+
+  // テンプレート情報の保存
+  const saveTemplateInfo = async () => {
+    const templatesArray = Array.from(templates.entries()).map(([style, resource]) => ({
+      style,
+      name: resource.name,
+      filename: `${style}.html`,
+    }));
+
+    await fs.writeFile(
+      TEMPLATES_JSON,
+      JSON.stringify({ templates: templatesArray }, null, 2),
+      "utf-8"
+    );
+  };
+
+  // テンプレート情報の読み込み
+  const loadTemplateInfo = async () => {
+    try {
+      const templateData = JSON.parse(await fs.readFile(TEMPLATES_JSON, "utf-8"));
+      for (const template of templateData.templates) {
+        templates.set(template.style, {
+          uri: `minutes://template/${template.style}`,
+          name: template.name,
+          mimeType: "text/html",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to load templates.json:", error);
+      // デフォルトのモダンテンプレートを登録
+      templates.set("modern", {
+        uri: "minutes://template/modern",
+        name: "Modern Meeting Minutes Template",
+        mimeType: "text/html",
+      });
+      await saveTemplateInfo();
+    }
+  };
+
+  // 初期化
+  await loadTemplateInfo();
 
   /**
    * リソース一覧の取得ハンドラー
@@ -58,7 +94,7 @@ export const createServer = () => {
    */
   server.setRequestHandler(ListResourcesRequestSchema, async () => {
     return {
-      resources: RESOURCES,
+      resources: Array.from(templates.values()),
     };
   });
 
@@ -84,15 +120,20 @@ export const createServer = () => {
    */
   server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
     const { uri } = request.params;
+    const template = Array.from(templates.entries()).find(([_, resource]) => resource.uri === uri);
 
-    // モダンテンプレートのリクエスト処理
-    if (uri === "minutes://template/modern") {
-      const content = await fs.readFile(TEMPLATE_PATH, "utf-8");
+    if (template) {
+      const [style, resource] = template;
+      const templatePath = path.join(TEMPLATES_DIR, style === "modern"
+        ? "meeting-minutes-template-modern.html"
+        : `${style}.html`);
+      
+      const content = await fs.readFile(templatePath, "utf-8");
       return {
         contents: [
           {
-            ...RESOURCES[0],
-            text: content, // テンプレートのHTML内容
+            ...resource,
+            text: content,
           },
         ],
       };
@@ -106,9 +147,24 @@ export const createServer = () => {
    * テンプレート取得ツールの入力スキーマ
    */
   const GetTemplateSchema = z.object({
-    style: z.enum(["modern"])
-      .describe("テンプレートのスタイル（現在はmodernのみ対応）")
+    style: z.string()
+      .describe("テンプレートのスタイル名" + Array.from(templates.keys()).join(", "))
       .default("modern"),
+  });
+
+  /**
+   * テンプレート登録ツールの入力スキーマ
+   */
+  const RegisterTemplateSchema = z.object({
+    style: z.string()
+      .describe("登録するテンプレートのスタイル名")
+      .min(1),
+    name: z.string()
+      .describe("テンプレートの表示名")
+      .min(1),
+    html: z.string()
+      .describe("テンプレートのHTML内容")
+      .min(1),
   });
 
   /**
@@ -120,6 +176,11 @@ export const createServer = () => {
         name: "get_template",
         description: "議事録テンプレートを取得するツール",
         inputSchema: zodToJsonSchema(GetTemplateSchema) as Tool["inputSchema"],
+      },
+      {
+        name: "register_template",
+        description: "新しい議事録テンプレートを登録するツール",
+        inputSchema: zodToJsonSchema(RegisterTemplateSchema) as Tool["inputSchema"],
       },
     ];
 
@@ -134,22 +195,56 @@ export const createServer = () => {
 
     if (name === "get_template") {
       const validatedArgs = GetTemplateSchema.parse(args);
-
-      if (validatedArgs.style === "modern") {
-        const content = await fs.readFile(TEMPLATE_PATH, "utf-8");
-        return {
-          content: [
-            {
-              type: "text",
-              text: content,
-            },
-          ],
-        };
+      const template = templates.get(validatedArgs.style);
+      
+      if (!template) {
+        throw new Error(`Template style "${validatedArgs.style}" not found`);
       }
+
+      const templatePath = validatedArgs.style === "modern"
+        ? path.join(TEMPLATES_DIR, "meeting-minutes-template-modern.html")
+        : path.join(TEMPLATES_DIR, `${validatedArgs.style}.html`);
+
+      const content = await fs.readFile(templatePath, "utf-8");
+      return {
+        content: [
+          {
+            type: "text",
+            text: content,
+          },
+        ],
+      };
+    }
+
+    if (name === "register_template") {
+      const validatedArgs = RegisterTemplateSchema.parse(args);
+      const { style, name: templateName, html } = validatedArgs;
+
+      // テンプレートファイルを保存
+      const templatePath = path.join(TEMPLATES_DIR, `${style}.html`);
+      await fs.writeFile(templatePath, html, "utf-8");
+
+      // テンプレート情報を登録
+      templates.set(style, {
+        uri: `minutes://template/${style}`,
+        name: templateName,
+        mimeType: "text/html",
+      });
+
+      // 設定を保存
+      await saveTemplateInfo();
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Template "${templateName}" (style: ${style}) has been registered successfully.`,
+          },
+        ],
+      };
     }
 
     throw new Error(`Unknown tool: ${name}`);
   });
-
-  return { server };
+  return { server, templates };
 };

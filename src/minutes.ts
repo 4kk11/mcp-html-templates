@@ -74,13 +74,6 @@ export const createServer = async () => {
       }
     } catch (error) {
       console.error("Failed to load templates.json:", error);
-      // デフォルトのモダンテンプレートを登録
-      templates.set("modern", {
-        uri: "minutes://template/modern",
-        name: "Modern Meeting Minutes Template",
-        mimeType: "text/html",
-      });
-      await saveTemplateInfo();
     }
   };
 
@@ -123,9 +116,7 @@ export const createServer = async () => {
 
     if (template) {
       const [style, resource] = template;
-      const templatePath = path.join(TEMPLATES_DIR, style === "modern"
-        ? "meeting-minutes-template-modern.html"
-        : `${style}.html`);
+      const templatePath = path.join(TEMPLATES_DIR, `${style}.html`);
       
       const content = await fs.readFile(templatePath, "utf-8");
       return {
@@ -162,11 +153,8 @@ export const createServer = async () => {
    * テンプレート登録ツールの入力スキーマ
    */
   const RegisterTemplateSchema = z.object({
-    style: z.string()
+    stylename: z.string()
       .describe("登録するテンプレートのスタイル名")
-      .min(1),
-    name: z.string()
-      .describe("テンプレートの表示名")
       .min(1),
     html: z.string()
       .describe("テンプレートのHTML内容")
@@ -207,9 +195,7 @@ export const createServer = async () => {
         throw new Error(`Template style "${validatedArgs.style}" not found`);
       }
 
-      const templatePath = validatedArgs.style === "modern"
-        ? path.join(TEMPLATES_DIR, "meeting-minutes-template-modern.html")
-        : path.join(TEMPLATES_DIR, `${validatedArgs.style}.html`);
+      const templatePath = path.join(TEMPLATES_DIR, `${validatedArgs.style}.html`);
 
       const content = await fs.readFile(templatePath, "utf-8");
       return {
@@ -224,16 +210,16 @@ export const createServer = async () => {
 
     if (name === "register_template") {
       const validatedArgs = RegisterTemplateSchema.parse(args);
-      const { style, name: templateName, html } = validatedArgs;
+      const { stylename, html } = validatedArgs;
 
       // テンプレートファイルを保存
-      const templatePath = path.join(TEMPLATES_DIR, `${style}.html`);
+      const templatePath = path.join(TEMPLATES_DIR, `${stylename}.html`);
       await fs.writeFile(templatePath, html, "utf-8");
 
       // テンプレート情報を登録
-      templates.set(style, {
-        uri: `minutes://template/${style}`,
-        name: templateName,
+      templates.set(stylename, {
+        uri: `minutes://template/${stylename}`,
+        name: stylename,
         mimeType: "text/html",
       });
 
@@ -244,7 +230,7 @@ export const createServer = async () => {
         content: [
           {
             type: "text",
-            text: `Template "${templateName}" (style: ${style}) has been registered successfully.`,
+            text: `Template "${stylename}" has been registered successfully.`,
           },
         ],
       };

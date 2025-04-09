@@ -128,7 +128,7 @@ export const createServer = async () => {
   const createGetTemplateSchema = () => {
     const styles = Array.from(templates.keys());
     if (styles.length === 0) {
-      throw new Error("No templates available");
+      console.error("No templates available");
     }
     return z.object({
       style: z.enum(styles as [string, ...string[]])

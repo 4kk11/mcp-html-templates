@@ -15,7 +15,7 @@ docker build -t mcp-html-templates .
         "-i",
         "--rm",
         "-v",
-        "{RESOURCE_DIR}:/app/resources",
+        "{TEMPLATES_DIR}:/app/resources",
         "mcp-html-templates"
       ]
     },

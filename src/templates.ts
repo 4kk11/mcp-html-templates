@@ -1,6 +1,6 @@
 /**
  * MCPサーバーの実装
- * 議事録のHTMLテンプレートをリソースとして提供する
+ * HTMLテンプレートをリソースとして提供する
  */
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
@@ -29,7 +29,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const createServer = async () => {
   const server = new Server(
     {
-      name: "mcp-minutes-generator",
+      name: "mcp-html-templates",
       version: "1.0.0",
     },
     {
@@ -55,7 +55,7 @@ export const createServer = async () => {
       for (const file of htmlFiles) {
         const stylename = path.basename(file, '.html');
         templates.set(stylename, {
-          uri: `minutes://template/${stylename}`,
+          uri: `templates://template/${stylename}`,
           name: stylename,
           mimeType: "text/html",
         });
@@ -70,7 +70,7 @@ export const createServer = async () => {
 
   /**
    * リソース一覧の取得ハンドラー
-   * クライアントが利用可能な議事録テンプレートの一覧を返す
+   * クライアントが利用可能なHTMLテンプレートの一覧を返す
    */
   server.setRequestHandler(ListResourcesRequestSchema, async () => {
     return {
@@ -86,9 +86,9 @@ export const createServer = async () => {
     return {
       resourceTemplates: [
         {
-          uriTemplate: "minutes://template/{style}", // スタイルをパラメータとして受け取れるように
-          name: "Meeting Minutes Template",
-          description: "HTML template for meeting minutes with different styles",
+          uriTemplate: "templates://template/{style}",
+          name: "HTML Template",
+          description: "HTML templates with different styles",
         },
       ],
     };
@@ -96,7 +96,7 @@ export const createServer = async () => {
 
   /**
    * リソース内容の読み取りハンドラー
-   * 指定されたURIに対応する議事録テンプレートのHTMLを返す
+   * 指定されたURIに対応するHTMLテンプレートを返す
    */
   server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
     const { uri } = request.params;
@@ -155,12 +155,12 @@ export const createServer = async () => {
     const tools: Tool[] = [
       {
         name: "get_template",
-        description: "議事録テンプレートを取得するツール（テンプレートを使う際、人名はアルファベットにすること）",
+        description: "HTMLテンプレートを取得するツール",
         inputSchema: zodToJsonSchema(createGetTemplateSchema()) as Tool["inputSchema"],
       },
       {
         name: "register_template",
-        description: "新しい議事録テンプレートを登録するツール（必ず事前にArtifactでプレビューを見せ、許可を得てから登録すること）",
+        description: "新しいHTMLテンプレートを登録するツール（必ず事前にプレビューを確認してから登録すること）",
         inputSchema: zodToJsonSchema(RegisterTemplateSchema) as Tool["inputSchema"],
       },
     ];
@@ -205,7 +205,7 @@ export const createServer = async () => {
 
       // テンプレート情報を登録
       templates.set(stylename, {
-        uri: `minutes://template/${stylename}`,
+        uri: `templates://template/${stylename}`,
         name: stylename,
         mimeType: "text/html",
       });

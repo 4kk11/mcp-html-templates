@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { createServer } from "./minutes.js";
+import { createServer } from "./everything.js";
 
 async function main() {
   const transport = new StdioServerTransport();
-  const { server } = createServer();
+  const { server, cleanup } = createServer();
 
   await server.connect(transport);
 
   // Cleanup on exit
   process.on("SIGINT", async () => {
+    await cleanup();
     await server.close();
     process.exit(0);
   });

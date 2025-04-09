@@ -8,7 +8,7 @@
   "license": "MIT",
   "type": "module",
   "bin": {
-    "weather": "./build/index.js"
+    "minutes-server": "./build/index.js"
   },
   "scripts": {
     "build": "tsc && chmod 755 build/index.js"

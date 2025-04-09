@@ -1,19 +1,16 @@
 {
   "templates": [
     {
-      "style": "modern",
-      "name": "Modern Meeting Minutes Template",
+      "stylename": "meeting-minutes-template-modern",
       "filename": "modern.html"
     },
     {
-      "style": "modern-orange",
-      "name": "オレンジパステル議事録",
+      "stylename": "meeting-minutes-template-modern-orange",
       "filename": "modern-orange.html"
     },
     {
-      "style": "modern-yellow-pastel",
-      "name": "レトロゲーム風議事録",
-      "filename": "modern-yellow-pastel.html"
+      "stylename": "meeting-minutes-template-retoro-game",
+      "filename": "retoro-game.html"
     }
   ]
 }

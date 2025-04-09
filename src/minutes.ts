@@ -50,9 +50,8 @@ export const createServer = async () => {
   // テンプレート情報の保存
   const saveTemplateInfo = async () => {
     const templatesArray = Array.from(templates.entries()).map(([style, resource]) => ({
-      style,
-      name: resource.name,
-      filename: `${style}.html`,
+      stylename: style,
+      filename: `${style}.html`
     }));
 
     await fs.writeFile(
@@ -67,9 +66,9 @@ export const createServer = async () => {
     try {
       const templateData = JSON.parse(await fs.readFile(TEMPLATES_JSON, "utf-8"));
       for (const template of templateData.templates) {
-        templates.set(template.style, {
-          uri: `minutes://template/${template.style}`,
-          name: template.name,
+        templates.set(template.stylename, {
+          uri: `minutes://template/${template.stylename}`,
+          name: template.stylename,
           mimeType: "text/html",
         });
       }

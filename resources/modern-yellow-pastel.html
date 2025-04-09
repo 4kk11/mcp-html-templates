@@ -4,33 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MTG議事録 - [日付]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #f7d65a;
-            --primary-light: #fffaeb;
-            --secondary-color: #b5a25d;
-            --accent-color: #f5b971;
-            --text-color: #5e5339;
-            --light-bg: #fffdf5;
-            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            --border-radius: 8px;
-            --border-color: rgba(181, 162, 93, 0.2);
+            --primary-color: #5E33FF;
+            --primary-light: #9B7AFF;
+            --secondary-color: #00CCFF;
+            --accent-color: #FF5555;
+            --text-color: #111111;
+            --light-bg: #DDDDFF;
+            --card-shadow: 0 4px 0 #3322CC;
+            --border-radius: 0px;
+            --border-color: #3322CC;
+            --pixel-font: 'Press Start 2P', 'Courier New', monospace;
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            font-family: var(--pixel-font);
+            image-rendering: pixelated;
         }
         
         body {
-            background-color: var(--light-bg);
+            background-color: #222255;
             color: var(--text-color);
             line-height: 1.6;
             font-size: 16px;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            background-image: 
+                linear-gradient(to right, #222255 1px, transparent 1px),
+                linear-gradient(to bottom, #222255 1px, transparent 1px);
+            background-size: 20px 20px;
+            image-rendering: pixelated;
         }
         
         .container {
@@ -41,11 +47,14 @@
         
         header {
             padding: 25px 30px;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            background: #6C49FF;
+            border-radius: 0;
             margin-bottom: 24px;
-            border-top: 5px solid var(--primary-color);
+            border: 4px solid #3322CC;
+            box-shadow: 6px 6px 0 #3322CC;
+            image-rendering: pixelated;
+            position: relative;
+            color: white;
         }
         
         h1 {
@@ -53,37 +62,46 @@
             font-size: 32px;
             font-weight: 700;
             line-height: 1.2;
-            color: var(--primary-color);
+            color: white;
             display: flex;
             align-items: center;
             gap: 10px;
+            text-shadow: 3px 3px 0 #3322CC;
+            letter-spacing: 1px;
         }
         
         .meta-info {
             display: flex;
             flex-wrap: wrap;
             margin-top: 16px;
-            color: rgba(94, 83, 57, 0.7);
+            color: white;
             font-size: 14px;
             gap: 20px;
+            border-top: 2px dashed #9B7AFF;
+            padding-top: 10px;
         }
         
         .meta-item {
             display: flex;
             align-items: center;
             gap: 8px;
+            background: #3322CC;
+            padding: 5px 10px;
+            border: 2px solid #FFFFFF;
         }
         
         .content-wrapper {
             display: grid;
-            gap: 24px;
+            gap: 20px;
         }
         
         .section {
             background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
+            border-radius: 0;
+            box-shadow: 6px 6px 0 #3322CC;
             overflow: hidden;
+            border: 4px solid #3322CC;
+            margin-bottom: 30px;
         }
         
         h2 {
@@ -91,23 +109,39 @@
             padding: 16px 20px;
             font-size: 20px;
             font-weight: 600;
-            background-color: var(--primary-light);
-            color: var(--secondary-color);
+            background: #00AAFF;
+            color: white;
             display: flex;
             align-items: center;
             gap: 8px;
+            text-shadow: 2px 2px 0 #0088CC;
+            border-bottom: 4px solid #0088CC;
         }
         
         .section-content {
             padding: 20px;
+            background-image: 
+                repeating-linear-gradient(0deg, #EFEFFF, #EFEFFF 2px, #FFFFFF 2px, #FFFFFF 4px);
         }
         
         .card {
             background: var(--light-bg);
             padding: 20px;
             margin-bottom: 16px;
-            border-radius: var(--border-radius);
-            border-left: 3px solid var(--secondary-color);
+            border: 4px solid #00AAFF;
+            box-shadow: 4px 4px 0 #0088CC;
+            position: relative;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            background: #F0F9FF;
+            z-index: -1;
         }
         
         h3 {
@@ -116,8 +150,8 @@
             padding-bottom: 8px;
             font-size: 18px;
             font-weight: 600;
-            color: var(--secondary-color);
-            border-bottom: 1px dashed var(--border-color);
+            color: #0088CC;
+            border-bottom: 3px dashed #0088CC;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -134,6 +168,8 @@
         
         li {
             margin-bottom: 8px;
+            padding-left: 5px;
+            border-left: 3px solid #00AAFF;
         }
         
         li:last-child {
@@ -145,35 +181,53 @@
             grid-template-columns: 1fr auto auto;
             gap: 10px;
             align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border-color);
+            padding: 12px 15px;
+            border: 3px solid #FF5555;
+            background-color: #FFEEEE;
+            margin-bottom: 10px;
+            position: relative;
         }
         
-        .todo-item:last-child {
-            border-bottom: none;
+        .todo-item::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            width: 100%;
+            height: 100%;
+            background-color: #CC3333;
+            z-index: -1;
         }
         
         .todo-person {
-            font-weight: 500;
-            color: var(--primary-color);
+            font-weight: 600;
+            color: white;
+            background-color: #FF5555;
+            padding: 3px 10px;
+            border: 2px solid #CC3333;
         }
         
         .todo-date {
             font-size: 14px;
-            color: var(--accent-color);
+            color: #111111;
+            background-color: #FFCC44;
+            padding: 3px 10px;
+            border: 2px solid #CC8800;
             white-space: nowrap;
         }
         
         .notes {
-            background-color: #fef8e8;
+            background-color: #99EEBB;
             padding: 20px;
-            border-radius: var(--border-radius);
-            border-left: 4px solid var(--accent-color);
+            border: 4px solid #00AA44;
+            box-shadow: 4px 4px 0 #008833;
+            position: relative;
         }
         
         .notes h3 {
-            color: #d9a950;
-            border-color: rgba(217, 169, 80, 0.2);
+            color: #008833;
+            border-color: #008833;
+            text-shadow: 1px 1px 0 #FFFFFF;
         }
         
         @media (max-width: 768px) {
@@ -192,6 +246,10 @@
             
             h2 {
                 font-size: 18px;
+            }
+            
+            .card, .notes, .section {
+                box-shadow: 4px 4px 0 #3322CC;
             }
         }
         
@@ -223,7 +281,7 @@
             }
             
             .card {
-                background-color: #fffdf5;
+                background-color: #f9f9f9;
             }
             
             .content-wrapper {
@@ -231,8 +289,8 @@
             }
             
             .notes {
-                background-color: #fef8e8 !important;
-                border-left: 3px solid var(--accent-color);
+                background-color: #99EEBB !important;
+                border-left: 3px solid #00AA44;
             }
             
             @page {

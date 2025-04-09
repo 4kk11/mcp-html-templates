@@ -181,7 +181,7 @@ export const createServer = async () => {
     const tools: Tool[] = [
       {
         name: "get_template",
-        description: "議事録テンプレートを取得するツール",
+        description: "議事録テンプレートを取得するツール（テンプレートを使う際、人名はアルファベットにすること）",
         inputSchema: zodToJsonSchema(createGetTemplateSchema()) as Tool["inputSchema"],
       },
       {

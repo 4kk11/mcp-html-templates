@@ -146,11 +146,18 @@ export const createServer = async () => {
   /**
    * テンプレート取得ツールの入力スキーマ
    */
-  const GetTemplateSchema = z.object({
-    style: z.string()
-      .describe("テンプレートのスタイル名" + Array.from(templates.keys()).join(", "))
-      .default("modern"),
-  });
+  // スタイル選択のスキーマを動的に生成
+  const createGetTemplateSchema = () => {
+    const styles = Array.from(templates.keys());
+    if (styles.length === 0) {
+      throw new Error("No templates available");
+    }
+    return z.object({
+      style: z.enum(styles as [string, ...string[]])
+        .describe("テンプレートのスタイル名（選択可能: " + styles.join(", ") + "）")
+        .default("modern"),
+    });
+  };
 
   /**
    * テンプレート登録ツールの入力スキーマ
@@ -175,11 +182,11 @@ export const createServer = async () => {
       {
         name: "get_template",
         description: "議事録テンプレートを取得するツール",
-        inputSchema: zodToJsonSchema(GetTemplateSchema) as Tool["inputSchema"],
+        inputSchema: zodToJsonSchema(createGetTemplateSchema()) as Tool["inputSchema"],
       },
       {
         name: "register_template",
-        description: "新しい議事録テンプレートを登録するツール",
+        description: "新しい議事録テンプレートを登録するツール（必ず事前にArtifactでプレビューを見せ、許可を得てから登録すること）",
         inputSchema: zodToJsonSchema(RegisterTemplateSchema) as Tool["inputSchema"],
       },
     ];
@@ -194,7 +201,7 @@ export const createServer = async () => {
     const { name, arguments: args } = request.params;
 
     if (name === "get_template") {
-      const validatedArgs = GetTemplateSchema.parse(args);
+      const validatedArgs = createGetTemplateSchema().parse(args);
       const template = templates.get(validatedArgs.style);
       
       if (!template) {

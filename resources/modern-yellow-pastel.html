@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTG議事録 - [日付]</title>
+    <style>
+        :root {
+            --primary-color: #f7d65a;
+            --primary-light: #fffaeb;
+            --secondary-color: #b5a25d;
+            --accent-color: #f5b971;
+            --text-color: #5e5339;
+            --light-bg: #fffdf5;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --border-radius: 8px;
+            --border-color: rgba(181, 162, 93, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 25px 30px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 24px;
+            border-top: 5px solid var(--primary-color);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .meta-info {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 16px;
+            color: rgba(94, 83, 57, 0.7);
+            font-size: 14px;
+            gap: 20px;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .content-wrapper {
+            display: grid;
+            gap: 24px;
+        }
+        
+        .section {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+        
+        h2 {
+            position: relative;
+            padding: 16px 20px;
+            font-size: 20px;
+            font-weight: 600;
+            background-color: var(--primary-light);
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-content {
+            padding: 20px;
+        }
+        
+        .card {
+            background: var(--light-bg);
+            padding: 20px;
+            margin-bottom: 16px;
+            border-radius: var(--border-radius);
+            border-left: 3px solid var(--secondary-color);
+        }
+        
+        h3 {
+            margin-top: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            border-bottom: 1px dashed var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h3:first-child {
+            margin-top: 0;
+        }
+        
+        ul, ol {
+            padding-left: 24px;
+            margin: 12px 0;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        li:last-child {
+            margin-bottom: 0;
+        }
+        
+        .todo-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 10px;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .todo-item:last-child {
+            border-bottom: none;
+        }
+        
+        .todo-person {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+        
+        .todo-date {
+            font-size: 14px;
+            color: var(--accent-color);
+            white-space: nowrap;
+        }
+        
+        .notes {
+            background-color: #fef8e8;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .notes h3 {
+            color: #d9a950;
+            border-color: rgba(217, 169, 80, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .meta-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            h2 {
+                font-size: 18px;
+            }
+        }
+        
+        /* PDF・印刷用のスタイル */
+        @media print {
+            body {
+                background-color: white;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .container {
+                margin: 0;
+                padding: 20px;
+                max-width: 100%;
+            }
+            
+            header {
+                box-shadow: none;
+                border: 1px solid var(--border-color);
+                border-top: 3px solid var(--primary-color);
+                margin-bottom: 20px;
+            }
+            
+            .section {
+                box-shadow: none;
+                border: 1px solid var(--border-color);
+                margin-bottom: 20px;
+            }
+            
+            .card {
+                background-color: #fffdf5;
+            }
+            
+            .content-wrapper {
+                gap: 15px;
+            }
+            
+            .notes {
+                background-color: #fef8e8 !important;
+                border-left: 3px solid var(--accent-color);
+            }
+            
+            @page {
+                margin: 0.5cm;
+                size: A4;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 MTG議事録 - [日付]</h1>
+            <div class="meta-info">
+                <div class="meta-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M3 10H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>[日付]</span>
+                </div>
+                <div class="meta-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>[担当者名]</span>
+                </div>
+                <div class="meta-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 8V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>[時間]</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="content-wrapper">
+            <div class="section">
+                <h2>👥 参加者</h2>
+                <div class="section-content">
+                    <ul>
+                        <li>[参加者1]</li>
+                        <li>[参加者2]</li>
+                        <li>[参加者3]</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🗣️ 議題1: [議題タイトル]</h2>
+                <div class="section-content">
+                    <div class="card">
+                        <h3>💭 議論内容</h3>
+                        <ul>
+                            <li>[主な意見1]</li>
+                            <li>[主な意見2]</li>
+                        </ul>
+                        <h3>🎯 結論</h3>
+                        <p>[議題1についての結論]</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🗣️ 議題2: [議題タイトル]</h2>
+                <div class="section-content">
+                    <div class="card">
+                        <h3>💭 議論内容</h3>
+                        <ul>
+                            <li>[主な意見1]</li>
+                            <li>[主な意見2]</li>
+                        </ul>
+                        <h3>🎯 結論</h3>
+                        <p>[議題2についての結論]</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>✅ 決定事項</h2>
+                <div class="section-content">
+                    <ul>
+                        <li>[決定事項1]</li>
+                        <li>[決定事項2]</li>
+                        <li>[決定事項3]</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>📋 次のアクション（TODO）</h2>
+                <div class="section-content">
+                    <div class="todo-item">
+                        <span>[タスク1の詳細]</span>
+                        <span class="todo-person">[担当者1]</span>
+                        <span class="todo-date">期限: [日付]</span>
+                    </div>
+                    <div class="todo-item">
+                        <span>[タスク2の詳細]</span>
+                        <span class="todo-person">[担当者2]</span>
+                        <span class="todo-date">期限: [日付]</span>
+                    </div>
+                    <div class="todo-item">
+                        <span>[タスク3の詳細]</span>
+                        <span class="todo-person">[担当者3]</span>
+                        <span class="todo-date">期限: [日付]</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-content">
+                    <div class="notes">
+                        <h3>📝 備考</h3>
+                        <ul>
+                            <li>[重要メモ1]</li>
+                            <li>[重要メモ2]</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

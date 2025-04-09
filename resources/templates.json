@@ -9,6 +9,11 @@
       "style": "modern-orange",
       "name": "オレンジパステル議事録",
       "filename": "modern-orange.html"
+    },
+    {
+      "style": "modern-yellow-pastel",
+      "name": "MTG議事録 - パステルイエロー",
+      "filename": "modern-yellow-pastel.html"
     }
   ]
 }

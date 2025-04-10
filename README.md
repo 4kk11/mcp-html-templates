@@ -1,4 +1,4 @@
-# MCP HTML Templates
+# mcp-html-templates
 
 Dockerを使用してHTMLテンプレートを管理するためのツールです。
 

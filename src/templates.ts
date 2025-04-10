@@ -22,6 +22,9 @@ import { fileURLToPath } from "url";
 // ESModuleでの__dirnameの代替実装
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// 環境変数からREAD_ONLYフラグを取得
+const isReadOnly = process.env.READ_ONLY === 'true';
+
 /**
  * MCPサーバーインスタンスを作成する
  * リソース機能のみを有効にした設定で初期化
@@ -158,12 +161,16 @@ export const createServer = async () => {
         description: "HTMLテンプレートを取得するツール",
         inputSchema: zodToJsonSchema(createGetTemplateSchema()) as Tool["inputSchema"],
       },
-      {
+    ];
+
+    // READ_ONLYモードでない場合のみregister_templateツールを追加
+    if (!isReadOnly) {
+      tools.push({
         name: "register_template",
         description: "新しいHTMLテンプレートを登録するツール（必ず事前にプレビューを確認してから登録すること）",
         inputSchema: zodToJsonSchema(RegisterTemplateSchema) as Tool["inputSchema"],
-      },
-    ];
+      });
+    }
 
     return { tools };
   });
@@ -196,6 +203,10 @@ export const createServer = async () => {
     }
 
     if (name === "register_template") {
+      // READ_ONLYモードの場合はエラーを返す
+      if (isReadOnly) {
+        throw new Error('Template registration is not allowed in read-only mode');
+      }
       const validatedArgs = RegisterTemplateSchema.parse(args);
       const { stylename, html } = validatedArgs;
 

@@ -1,8 +1,15 @@
+# MCP HTML Templates
 
+Dockerを使用してHTMLテンプレートを管理するためのツールです。
+
+## 使い方
 
 ```bash
-cd mcp-html-templates
-docker build -t mcp-html-templates .
+# Dockerイメージをビルド
+make build
+
+# Dockerイメージを削除
+make clean
 ```
 
 ```json
@@ -16,8 +23,13 @@ docker build -t mcp-html-templates .
         "--rm",
         "-v",
         "{TEMPLATES_DIR}:/app/resources",
+        "-e",
+        "READ_ONLY",
         "mcp-html-templates"
-      ]
+      ],
+      "env": {
+        "READ_ONLY": false
+      }
     },
   }
 }

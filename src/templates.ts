@@ -44,7 +44,9 @@ export const createServer = async () => {
   );
 
   // テンプレート関連のパス設定
-  const TEMPLATES_DIR = path.join(__dirname, "../resources");
+  const TEMPLATES_DIR = process.env.TEMPLATES_DIR 
+    ? path.resolve(process.env.TEMPLATES_DIR) 
+    : path.join(__dirname, "../resources");
 
   // テンプレート情報を管理するMap
   const templates = new Map<string, Resource>();

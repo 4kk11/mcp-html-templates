@@ -54,15 +54,34 @@ docker pull 4kk11/mcp-html-templates
         "-i",
         "--rm",
         "-v", // optional
-        "{TEMPLATES_DIR}:/app/resources", // optional
+        "YOUR_TEMPLATES_DIR:/app/resources", // optional
         "-e", // 
         "READ_ONLY",
         "4kk11/mcp-html-templates"
       ],
       "env": {
-        "READ_ONLY": false
+        "READ_ONLY": "false"
       }
     },
   }
+}
+```
+
+
+### npx
+
+```json
+"mcpServers": {
+    "html-templates": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-html-templates"
+      ],
+      "env": {
+        "READ_ONLY": "false",
+        "TEMPLATES_DIR": "YOUR_TEMPLATES_DIR"
+      }
+    }
 }
 ```

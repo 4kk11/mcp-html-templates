@@ -23,7 +23,7 @@ make clean
         "-i",
         "--rm",
         "-v",
-        "{TEMPLATES_DIR}:/app/resources",
+        "YOUR_TEMPLATES_DIR:/app/resources",
         "-e",
         "READ_ONLY",
         "mcp-html-templates"

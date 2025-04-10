@@ -165,7 +165,7 @@ export const createServer = async () => {
     const tools: Tool[] = [
       {
         name: ToolName.GET_TEMPLATE,
-        description: "HTMLテンプレートを取得するツール",
+        description: "HTMLテンプレートを取得するツール（人名はアルファベットを優先すること）",
         inputSchema: zodToJsonSchema(createGetTemplateSchema()) as Tool["inputSchema"],
       },
     ];
@@ -174,7 +174,7 @@ export const createServer = async () => {
     if (!isReadOnly) {
       tools.push({
         name: ToolName.REGISTER_TEMPLATE,
-        description: "新しいHTMLテンプレートを登録するツール（必ず事前にプレビューを確認してから登録すること）",
+        description: "新しいHTMLテンプレートを登録するツール（必ず事前にArtifactでプレビューを確認させ、許可を得てから登録すること）",
         inputSchema: zodToJsonSchema(RegisterTemplateSchema) as Tool["inputSchema"],
       });
     }

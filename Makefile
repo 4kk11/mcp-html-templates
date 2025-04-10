@@ -2,7 +2,7 @@
 
 # Docker commands
 docker-build:
-	docker build -t mcp-html-templates .
+	docker build -t mcp-html-templates . && docker image prune -f
 
 docker-run:
 	docker run -i --rm -v ./resources:/app/resources mcp-html-templates

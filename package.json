@@ -1,6 +1,6 @@
 {
   "name": "mcp-html-templates",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "HTML template creation and management tool",
   "main": "./build/index.js",
   "keywords": ["mcp", "html", "templates"],

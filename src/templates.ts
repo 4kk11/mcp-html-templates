@@ -151,13 +151,18 @@ export const createServer = async () => {
       .min(1),
   });
 
+
+  enum ToolName {
+    GET_TEMPLATE = "get_template",
+    REGISTER_TEMPLATE = "register_template",
+  }
   /**
    * 利用可能なツール一覧の取得ハンドラー
    */
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     const tools: Tool[] = [
       {
-        name: "get_template",
+        name: ToolName.GET_TEMPLATE,
         description: "HTMLテンプレートを取得するツール",
         inputSchema: zodToJsonSchema(createGetTemplateSchema()) as Tool["inputSchema"],
       },
@@ -166,7 +171,7 @@ export const createServer = async () => {
     // READ_ONLYモードでない場合のみregister_templateツールを追加
     if (!isReadOnly) {
       tools.push({
-        name: "register_template",
+        name: ToolName.REGISTER_TEMPLATE,
         description: "新しいHTMLテンプレートを登録するツール（必ず事前にプレビューを確認してから登録すること）",
         inputSchema: zodToJsonSchema(RegisterTemplateSchema) as Tool["inputSchema"],
       });
@@ -181,7 +186,7 @@ export const createServer = async () => {
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args } = request.params;
 
-    if (name === "get_template") {
+    if (name === ToolName.GET_TEMPLATE) {
       const validatedArgs = createGetTemplateSchema().parse(args);
       const template = templates.get(validatedArgs.style);
       
@@ -202,7 +207,7 @@ export const createServer = async () => {
       };
     }
 
-    if (name === "register_template") {
+    if (name === ToolName.REGISTER_TEMPLATE) {
       // READ_ONLYモードの場合はエラーを返す
       if (isReadOnly) {
         throw new Error('Template registration is not allowed in read-only mode');

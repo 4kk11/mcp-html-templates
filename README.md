@@ -4,7 +4,8 @@
 [![Docker Image](https://img.shields.io/docker/v/4kk11/mcp-html-templates?logo=docker)](https://hub.docker.com/r/4kk11/mcp-html-templates)
 
 HTMLテンプレートを管理するためのMCPサーバーです。   
-様々なHTMLテンプレートをLLMに接続することができます。
+議事録や請求書などの様々なレイアウトのテンプレートをHTML形式で管理し、LLMに接続して利用することができます。
+
 
 ## 主な機能
 

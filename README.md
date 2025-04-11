@@ -6,6 +6,7 @@
 An MCP server for managing and utilizing HTML templates.
 You can manage various layout templates such as minutes and invoices in HTML format and use them in connection with LLMs.
 
+You can convert your HTML templates to PDF by using [mcp-html2pdf](https://github.com/4kk11/mcp-html2pdf).
 
 ## Main Features
 

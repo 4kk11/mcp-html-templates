@@ -137,7 +137,7 @@ export const createServer = async () => {
     }
     return z.object({
       style: z.enum(styles as [string, ...string[]])
-        .describe("テンプレートのスタイル名（選択可能: " + styles.join(", ") + "）"),
+        .describe("Template style name (available options: " + styles.join(", ") + ")"),
     });
   };
 
@@ -146,10 +146,10 @@ export const createServer = async () => {
    */
   const RegisterTemplateSchema = z.object({
     stylename: z.string()
-      .describe("登録するテンプレートのスタイル名")
+      .describe("Style name for the template to register")
       .min(1),
     html: z.string()
-      .describe("テンプレートのHTML内容")
+      .describe("HTML content of the template")
       .min(1),
   });
 
@@ -165,7 +165,7 @@ export const createServer = async () => {
     const tools: Tool[] = [
       {
         name: ToolName.GET_TEMPLATE,
-        description: "HTMLテンプレートを取得するツール（テンプレートを使用する際、人名は必ずアルファベットにすること）",
+        description: "Tool to retrieve HTML templates (when using templates, names must be in alphabet)",
         inputSchema: zodToJsonSchema(createGetTemplateSchema()) as Tool["inputSchema"],
       },
     ];
@@ -174,7 +174,7 @@ export const createServer = async () => {
     if (!isReadOnly) {
       tools.push({
         name: ToolName.REGISTER_TEMPLATE,
-        description: "新しいHTMLテンプレートを登録するツール（必ず事前にArtifactでプレビューを確認させ、許可を得てから登録すること）",
+        description: "Tool to register new HTML templates (must preview with Artifact and get approval before registration)",
         inputSchema: zodToJsonSchema(RegisterTemplateSchema) as Tool["inputSchema"],
       });
     }

@@ -82,7 +82,7 @@ Configuration example (claude_desktop_config.json):
 | Variable Name | Description | Default Value |
 |--------------|-------------|---------------|
 | READ_ONLY | Whether to allow adding/modifying templates | false |
-| TEMPLATES_DIR | Path to directory where template files are stored (npx only) | - |
+| TEMPLATES_DIR | Path to directory where template files are stored | - |
 
 ## For Developers
 

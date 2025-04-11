@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/mcp-html-templates.svg)](https://www.npmjs.com/package/mcp-html-templates)
 [![Docker Image](https://img.shields.io/docker/v/4kk11/mcp-html-templates?logo=docker)](https://hub.docker.com/r/4kk11/mcp-html-templates)
 
-HTMLテンプレートを管理するためのMCPサーバーです。
+HTMLテンプレートを管理するためのMCPサーバーです。   
 様々なHTMLテンプレートをLLMに接続することができます。
 
 ## 主な機能

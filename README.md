@@ -9,11 +9,14 @@ HTMLテンプレートを管理するためのMCPサーバーです。
 ## 主な機能
 
 ### 1. テンプレートの使用
-既存のテンプレートを取得して利用する    
-https://github.com/user-attachments/assets/93ba0161-de70-4e4c-923b-d23f259366f3
+既存のテンプレートを取得して利用する  
+
+https://github.com/user-attachments/assets/a9c49cf5-4832-46e7-ac64-f664927f6dbf
+
 
 ### 2. テンプレートの登録
 新しいテンプレートを登録する    
+
 https://github.com/user-attachments/assets/89599dd3-428a-4749-83ec-a8007436bdf7
 
 

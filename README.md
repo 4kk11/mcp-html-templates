@@ -1,23 +1,29 @@
 # mcp-html-templates
 
-HTMLテンプレートを管理するためのMCPサーバー
+HTMLテンプレートを管理するためのMCPサーバーです。
+様々なHTMLテンプレートをLLMに接続することができます。
 
-# できること
-### テンプレートを使用する
+## 主な機能
+
+### 1. テンプレートの使用
+既存のテンプレートを取得して利用する。
 https://github.com/user-attachments/assets/93ba0161-de70-4e4c-923b-d23f259366f3
 
-### テンプレートを登録する
+### 2. テンプレートの登録
+新しいテンプレートを登録する。
 https://github.com/user-attachments/assets/89599dd3-428a-4749-83ec-a8007436bdf7
 
 
-# 使い方
+## インストール方法
 
-## Docker
+### Dockerを使用する場合
 
+1. Dockerイメージをプル
 ```bash
 docker pull 4kk11/mcp-html-templates
 ```
 
+2. 設定例（claude_desktop_config.json）
 ```json
 {
   "mcpServers": {
@@ -27,25 +33,26 @@ docker pull 4kk11/mcp-html-templates
         "run",
         "-i",
         "--rm",
-        "-v", // optional
-        "YOUR_TEMPLATES_DIR:/app/resources", // optional
-        "-e", // 
+        "-v",
+        "YOUR_TEMPLATES_DIR:/app/resources",
+        "-e",
         "READ_ONLY",
         "4kk11/mcp-html-templates"
       ],
       "env": {
         "READ_ONLY": "false"
       }
-    },
+    }
   }
 }
 ```
 
+### npxを使用する場合
 
-## npx
-
+設定例（claude_desktop_config.json）:
 ```json
-"mcpServers": {
+{
+  "mcpServers": {
     "html-templates": {
       "command": "npx",
       "args": [
@@ -57,10 +64,23 @@ docker pull 4kk11/mcp-html-templates
         "TEMPLATES_DIR": "YOUR_TEMPLATES_DIR"
       }
     }
+  }
 }
 ```
 
-# 開発
+## 環境変数
+
+> **注意**: Dockerを使用する場合、テンプレートディレクトリの指定は環境変数ではなく、Dockerのボリュームマウント（`-v YOUR_TEMPLATES_DIR:/app/resources`）で行う必要があります。
+
+| 変数名 | 説明 | デフォルト値 |
+|--------|------|--------------|
+| READ_ONLY | テンプレートの追加・変更を許可するかどうか | false |
+| TEMPLATES_DIR | テンプレートファイルを保存するディレクトリのパス（npxの場合のみ） | - |
+
+## 開発者向け
+
+### Dockerイメージのビルドと管理
+
 ```bash
 # Dockerイメージをビルド
 make build
@@ -69,6 +89,7 @@ make build
 make clean
 ```
 
+開発時の設定例（claude_desktop_config.json）:
 ```json
 {
   "mcpServers": {
@@ -87,9 +108,11 @@ make clean
       "env": {
         "READ_ONLY": false
       }
-    },
+    }
   }
 }
 ```
 
+## ライセンス
 
+このプロジェクトはMITライセンスの下で公開されています。詳細は[LICENSE](LICENSE)ファイルをご覧ください。

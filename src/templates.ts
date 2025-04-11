@@ -165,7 +165,7 @@ export const createServer = async () => {
     const tools: Tool[] = [
       {
         name: ToolName.GET_TEMPLATE,
-        description: "HTMLテンプレートを取得するツール（人名はアルファベットを優先すること）",
+        description: "HTMLテンプレートを取得するツール（テンプレートを使用する際、人名は必ずアルファベットにすること）",
         inputSchema: zodToJsonSchema(createGetTemplateSchema()) as Tool["inputSchema"],
       },
     ];

@@ -3,34 +3,34 @@
 [![npm version](https://badge.fury.io/js/mcp-html-templates.svg)](https://www.npmjs.com/package/mcp-html-templates)
 [![Docker Image](https://img.shields.io/docker/v/4kk11/mcp-html-templates?logo=docker)](https://hub.docker.com/r/4kk11/mcp-html-templates)
 
-HTMLテンプレートを管理するためのMCPサーバーです。   
-議事録や請求書などの様々なレイアウトのテンプレートをHTML形式で管理し、LLMに接続して利用することができます。
+An MCP server for managing and utilizing HTML templates.
+You can manage various layout templates such as minutes and invoices in HTML format and use them in connection with LLMs.
 
 
-## 主な機能
+## Main Features
 
-### 1. テンプレートの使用
-既存のテンプレートを取得して利用する  
+### 1. Using Templates
+Retrieve and use existing templates
 
 https://github.com/user-attachments/assets/a9c49cf5-4832-46e7-ac64-f664927f6dbf
 
 
-### 2. テンプレートの登録
-新しいテンプレートを登録する    
+### 2. Registering Templates
+Register new templates
 
 https://github.com/user-attachments/assets/89599dd3-428a-4749-83ec-a8007436bdf7
 
 
-## インストール方法
+## Installation
 
-### Dockerを使用する場合
+### Using Docker
 
-1. Dockerイメージをプル
+1. Pull Docker image
 ```bash
 docker pull 4kk11/mcp-html-templates
 ```
 
-2. 設定例（claude_desktop_config.json）
+2. Configuration example (claude_desktop_config.json)
 ```json
 {
   "mcpServers": {
@@ -54,9 +54,9 @@ docker pull 4kk11/mcp-html-templates
 }
 ```
 
-### npxを使用する場合
+### Using npx
 
-設定例（claude_desktop_config.json）:
+Configuration example (claude_desktop_config.json):
 ```json
 {
   "mcpServers": {
@@ -75,28 +75,28 @@ docker pull 4kk11/mcp-html-templates
 }
 ```
 
-## 環境変数
+## Environment Variables
 
-> **注意**: Dockerを使用する場合、テンプレートディレクトリの指定は環境変数ではなく、Dockerのボリュームマウント（`-v YOUR_TEMPLATES_DIR:/app/resources`）で行う必要があります。
+> **Note**: When using Docker, the template directory must be specified using Docker volume mount (`-v YOUR_TEMPLATES_DIR:/app/resources`) instead of environment variables.
 
-| 変数名 | 説明 | デフォルト値 |
-|--------|------|--------------|
-| READ_ONLY | テンプレートの追加・変更を許可するかどうか | false |
-| TEMPLATES_DIR | テンプレートファイルを保存するディレクトリのパス（npxの場合のみ） | - |
+| Variable Name | Description | Default Value |
+|--------------|-------------|---------------|
+| READ_ONLY | Whether to allow adding/modifying templates | false |
+| TEMPLATES_DIR | Path to directory where template files are stored (npx only) | - |
 
-## 開発者向け
+## For Developers
 
-### Dockerイメージのビルドと管理
+### Building and Managing Docker Images
 
 ```bash
-# Dockerイメージをビルド
+# Build Docker image
 make build
 
-# Dockerイメージを削除
+# Remove Docker image
 make clean
 ```
 
-開発時の設定例（claude_desktop_config.json）:
+Development configuration example (claude_desktop_config.json):
 ```json
 {
   "mcpServers": {
@@ -120,6 +120,6 @@ make clean
 }
 ```
 
-## ライセンス
+## License
 
-このプロジェクトはMITライセンスの下で公開されています。詳細は[LICENSE](LICENSE)ファイルをご覧ください。
+This project is released under the MIT License. See [LICENSE](LICENSE) file for details.

@@ -90,10 +90,10 @@ Configuration example (claude_desktop_config.json):
 
 ```bash
 # Build Docker image
-make build
+make docker-build
 
 # Remove Docker image
-make clean
+make docker-clean
 ```
 
 Development configuration example (claude_desktop_config.json):

@@ -90,10 +90,10 @@ docker pull 4kk11/mcp-html-templates
 
 ```bash
 # Dockerイメージをビルド
-make build
+make docker-build
 
 # Dockerイメージを削除
-make clean
+make docker-clean
 ```
 
 開発時の設定例（claude_desktop_config.json）:
